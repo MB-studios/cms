@@ -7,34 +7,30 @@
     "start": "node server",
     "server": "nodemon server",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "update": "npx npm-check-updates -u"
   },
   "author": "Max Strandberg",
   "license": "ISC",
   "dependencies": {
-    "@bit/mux.login.access_types.login-access-types": "0.0.1",
-    "@bit/mux.login.middleware_auth": "^0.1.14",
-    "@bit/mux.login.models_access.access": "0.0.1",
-    "@bit/mux.login.models_group.group": "0.0.1",
-    "@bit/mux.login.models_user": "^0.1.1",
     "bcryptjs": "^2.4.3",
-    "config": "^3.3.2",
+    "config": "^3.3.6",
     "express": "^4.17.1",
-    "express-validator": "^6.6.1",
+    "express-validator": "^6.13.0",
     "form-data": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mailgun.js": "^3.7.0",
+    "mailgun.js": "^3.7.2",
     "moment": "^2.29.1",
-    "mongoose": "^5.10.13",
+    "mongoose": "^6.0.12",
     "randomatic": "^3.1.1",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "config": "^3.3.2"
+    "config": "^3.3.6"
   },
   "devDependencies": {
-    "concurrently": "^5.3.0",
-    "nodemon": "^2.0.6"
+    "concurrently": "^6.3.0",
+    "nodemon": "^2.0.14"
   },
   "bit": {
     "env": {},
