@@ -172,15 +172,19 @@ router.post(
     email = email.toLowerCase();
 
     try {
-      const user = await User.findOne({ email });
+      var user = await User.findOne({ email });
 
       if (!user) {
-        // TODO lägg till användare som inte finns
-        return res
+        user = new User({
+          email,
+          activated: !config.get('activationRequired'),
+        });
 
-          .status(400)
+        const salt = await bcrypt.genSalt(10);
 
-          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+        user.password = await bcrypt.hash(randomize('Aa0', 30), salt);
+
+        await user.save();
       }
 
       var now = moment();
@@ -194,8 +198,8 @@ router.post(
       }
 
       await mailgun.messages.create(config.get('mailgunDomain'), {
-        from: 'Excited User <mailgun@sandbox-123.mailgun.org>',
-        to: ['max.strandberg@gmail.com'],
+        from: 'Utbildarbokning.se <noreply@utbildarbokning.se>',
+        to: [email],
         subject: 'Hello',
         text: 'Asd!',
         html: `<h1>${user.oneTimeCode}</h1>`,
