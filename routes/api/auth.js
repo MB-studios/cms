@@ -193,16 +193,13 @@ router.post(
         await user.save();
       }
 
-      await mailgun.messages.create(
-        'sandbox2b4d7b4af10f4df3ba8810c28f9a7ca1.mailgun.org',
-        {
-          from: 'Excited User <mailgun@sandbox-123.mailgun.org>',
-          to: ['max.strandberg@gmail.com'],
-          subject: 'Hello',
-          text: 'Asd!',
-          html: `<h1>${user.oneTimeCode}</h1>`,
-        }
-      );
+      await mailgun.messages.create(config.get('mailgunDomain'), {
+        from: 'Excited User <mailgun@sandbox-123.mailgun.org>',
+        to: ['max.strandberg@gmail.com'],
+        subject: 'Hello',
+        text: 'Asd!',
+        html: `<h1>${user.oneTimeCode}</h1>`,
+      });
       return res.json({ msg: 'Success!' });
     } catch (error) {
       console.error(error);
