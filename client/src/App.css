@@ -1,0 +1,24 @@
+#nav-login-dropdown + div {
+  padding: 0px;
+}
+
+#login-dp {
+  min-width: 250px;
+  padding: 14px 14px 0;
+  overflow: hidden;
+}
+
+#login-dp .form-group {
+  margin-bottom: 10px;
+}
+
+#login-dp .help-block {
+  font-size: 12px;
+}
+
+#login-dp .bottom {
+  background-color: #444;
+  border-top: 1px solid #444;
+  padding: 14px;
+  text-align: center;
+}
