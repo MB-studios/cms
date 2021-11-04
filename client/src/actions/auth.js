@@ -8,6 +8,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  UPDATEPROFILE_SUCCESS,
+  UPDATEPROFILE_FAIL,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
