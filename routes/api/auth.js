@@ -198,7 +198,7 @@ router.post(
       }
 
       await mailgun.messages.create(config.get('mailgunDomain'), {
-        from: 'Utbildarbokning.se <noreply@utbildarbokning.se>',
+        from: 'Utbildarbokning.se <noreply@mail.utbildarbokning.se>',
         to: [email],
         subject: 'Hello',
         text: 'Asd!',
