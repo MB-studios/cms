@@ -324,4 +324,56 @@ router.post(
   }
 );
 
+// @route   POST api/users/updateprofile
+
+// @desc    Update name and password of logged in profile
+
+// @access  Private
+
+router.post(
+  '/updateprofile',
+
+  [
+    auth(),
+    [
+      check('name', 'Name is required').not().isEmpty(),
+      check(
+        'password',
+
+        'Please enter a password with 6 or more characters'
+      ).isLength({ min: 6 }),
+    ],
+  ],
+
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, password } = req.body;
+
+    try {
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+        return res.status(400).json({ errors: [{ msg: 'No such user' }] });
+      }
+
+      user.name = name;
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+
+      await user.save();
+
+      res.json({ msg: 'Success!' });
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).send('Server error');
+    }
+  }
+);
+
 module.exports = router;
