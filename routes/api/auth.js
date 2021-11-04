@@ -200,9 +200,15 @@ router.post(
       await mailgun.messages.create(config.get('mailgunDomain'), {
         from: 'Utbildarbokning.se <noreply@mail.utbildarbokning.se>',
         to: [email],
-        subject: 'Hello',
-        text: 'Asd!',
-        html: `<h1>${user.oneTimeCode}</h1>`,
+        subject: `Din engångskod är ${user.oneTimeCode}`,
+        text: `Välkommen till utbildarbokning.se!
+        Din engångskod är: ${user.oneTimeCode}
+        Tänk på att koden endast gäller i femton minuter efter att den utfärdats
+        Vid problem med inloggning kan du skicka ett mail till max.strandberg@gymnastik.se så hjälper jag dig snarast möjligt!`,
+        html: `<h1>Välkommen till utbildarbokning.se!</h1>
+        <h3>Du kan nu logga med engångskoden: ${user.oneTimeCode}</h3>
+        <p>Tänk på att koden endast gäller i femton minuter efter att den utfärdats</p>
+        <p>Vid problem med inloggning kan du skicka ett mail till <b>max.strandberg@gymnastik.se</b> så hjälper jag dig snarast möjligt!</p>`,
       });
       return res.json({ msg: 'Success!' });
     } catch (error) {
