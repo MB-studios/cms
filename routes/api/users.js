@@ -376,4 +376,28 @@ router.post(
   }
 );
 
+// @route   GET api/users/all
+
+// @desc    Get all users
+
+// @access  Private
+
+router.get(
+  '/all',
+
+  auth({ type: USERS, read: false, write: false }),
+
+  async (req, res) => {
+    try {
+      const users = await User.find().select('id name email');
+
+      res.json(users);
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).send('Server error');
+    }
+  }
+);
+
 module.exports = router;
