@@ -389,7 +389,7 @@ router.get(
 
   async (req, res) => {
     try {
-      const users = await User.find().select('id name email');
+      const users = await User.find().select('id name email').sort('name');
 
       res.json(users);
     } catch (error) {
