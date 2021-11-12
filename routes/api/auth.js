@@ -35,7 +35,7 @@ router.get(
     try {
       const user = await User.findById(req.user.id)
 
-        .select('id name email')
+        .select('id name email hasPassword')
 
         .populate({
           path: 'groups',
