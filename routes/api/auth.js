@@ -101,7 +101,8 @@ router.post(
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch =
+        user.password && (await bcrypt.compare(password, user.password));
 
       if (!isMatch) {
         return res
@@ -182,7 +183,7 @@ router.post(
 
         const salt = await bcrypt.genSalt(10);
 
-        user.password = await bcrypt.hash(randomize('Aa0', 30), salt);
+        user.password = 'onetimelogin';
 
         await user.save();
       }
@@ -194,6 +195,7 @@ router.post(
       ) {
         user.oneTimeCode = randomize('A', 6);
         user.oneTimeCodeExpires = moment().add(15, 'minutes');
+        user.passwordResetTime = Date();
         await user.save();
       }
 

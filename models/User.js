@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const UserSchema = new mongoose.Schema({
   name: { type: String },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String },
   activated: { type: Boolean, required: true, default: false },
   activationCode: { type: String, default: uuidv4 },
   passwordResetCode: { type: String, default: null },
