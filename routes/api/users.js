@@ -69,6 +69,7 @@ router.post(
         email,
 
         password,
+        hasPassword: true,
 
         activated: !config.get('activationRequired'),
       });
