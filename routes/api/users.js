@@ -365,6 +365,7 @@ router.post(
       user.name = name;
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
+      user.hasPassword = true;
 
       await user.save();
 
