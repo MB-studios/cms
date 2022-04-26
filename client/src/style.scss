@@ -1,0 +1,75 @@
+@import '~bootstrap/scss/bootstrap';
+
+body,
+html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background-color: #69b2e3;
+}
+
+.user_card {
+	height: 420px;
+	width: 350px;
+	margin-top: auto;
+	margin-bottom: auto;
+	background: #f39c12;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	padding: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border-radius: 5px;
+}
+
+.brand_logo_container {
+	position: absolute;
+	height: 170px;
+	width: 170px;
+	top: -75px;
+	border-radius: 50%;
+	background: #69b2e3;
+	padding: 10px;
+	text-align: center;
+}
+
+.brand_logo {
+	height: 150px;
+	width: 150px;
+	border-radius: 50%;
+	border: 2px solid white;
+}
+
+.title {
+	margin-top: 100px;
+	text-align: center;
+	color: white;
+}
+
+.login_btn {
+	width: 100%;
+	background: #006aa7 !important;
+	color: white !important;
+}
+
+@mixin button-style($name, $width) {
+	#{$name} {
+		width: #{$width};
+	}
+}
+
+@include button-style('.groupButton', 100px);
+
+.userTableFilter {
+	$height: 25px;
+	height: $height;
+	input {
+		height: $height;
+	}
+	select {
+		height: $height;
+	}
+}

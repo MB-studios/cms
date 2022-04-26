@@ -1,70 +1,78 @@
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const User = require('../models/User');
+const Group = require('../models/Group');
 
-const checkForAccess = (groups, access) => {
-  if (groups) {
-    console.log('Access: ');
-    console.log(access);
+async function checkForAccess(user, access) {
+	var u = await User.findById(user.id).populate({
+		path: 'groups',
+		populate: {
+			path: 'access',
+		},
+	});
 
-    var readFound = false;
-    var writeFound = false;
+	if (!u) {
+		throw new Error('User not found');
+	}
+	if (u.groups.length === 0) {
+		throw new Error('Access not found');
+	}
 
-    if (!access.read && !access.write) {
-      console.log('Access for all');
-      return true;
-    }
-    for (var i = 0; i < groups.length; i++) {
-      var group = groups[i];
-      console.log(group.access);
+	u.groups.map((group) => {
+		if (
+			group.access.filter((a) => {
+				return a.type === access.type;
+			}).length == 0
+		) {
+			throw new Error('Access not found');
+		}
+		if (
+			group.access.filter((a) => {
+				return a.type === access.type && (!access.read || a.read);
+			}).length == 0
+		) {
+			throw new Error('Read access not found');
+		}
 
-      var groupAccess = group.access.find((a) => a.type === access.type);
-      console.log('Group access: ');
-      console.log(groupAccess);
-      if (access.read && groupAccess && groupAccess.read) {
-        console.log('Read access aquired');
-        readFound = true;
-      }
+		if (
+			group.access.filter((a) => {
+				return a.type === access.type && (!access.write || a.write);
+			}).length == 0
+		) {
+			throw new Error('Write access not found');
+		}
+	});
 
-      if (access.write && groupAccess && groupAccess.write) {
-        console.log('Write access aquired');
-        writeFound = true;
-      }
+	return true;
+}
 
-      if ((!access.read || readFound) && (!access.write || writeFound)) {
-        console.log('Access aquired');
-        return true;
-      }
-    }
-  }
-  console.log('Access denied');
-  return false;
-};
+function auth(access) {
+	//console.log(access);
+	return async function (req, res, next) {
+		const token = req.header('x-auth-token');
+		if (!token) {
+			return res.status(401).json({ errors: [{ msg: 'No token, authorization denied' }] });
+		}
 
-module.exports = function (access = {}) {
-  console.log(access);
-  return function (req, res, next) {
-    const token = req.header('x-auth-token');
-    if (!token) {
-      return res.status(401).json({ msg: 'No token, authorization denied' });
-    }
+		try {
+			const decoded = jwt.verify(token, config.get('jwtSecret'));
+			if (decoded.user && access) {
+				await checkForAccess(decoded.user, access);
+			}
 
-    try {
-      const decoded = jwt.verify(token, config.get('jwtSecret'));
+			req.user = decoded.user;
+			//console.log(req.user.groups[0]);
+			next();
+		} catch (error) {
+			if (error.name === 'no_access') {
+				return res.status(401).json({ errors: [error] });
+			}
+			return res.status(401).json({ errors: [{ msg: 'Invalid Token' }] });
+		}
+	};
+}
 
-      //console.log(access);
-      //console.log(decoded.user);
-      if (decoded.user && access) {
-        if (!checkForAccess(decoded.user.groups, access)) {
-          return res.status(401).json({ msg: 'Authorization denied' });
-        }
-      }
-
-      req.user = decoded.user;
-      //console.log(req.user.groups[0]);
-      next();
-    } catch (error) {
-      console.log(error);
-      res.status(401).json({ msg: 'Token is not valid' });
-    }
-  };
+module.exports = {
+	checkForAccess,
+	auth,
 };

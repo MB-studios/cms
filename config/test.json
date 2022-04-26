@@ -1,0 +1,7 @@
+{
+	"mongoURI": "mongodb://localhost:27017/test",
+	"jwtSecret": "testSecret",
+	"jwtExpires": 360000,
+	"oneTimeCodeExpires": 9000,
+	"activationRequired": true
+}

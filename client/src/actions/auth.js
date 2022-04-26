@@ -1,120 +1,118 @@
 import axios from 'axios';
 import { setAlert } from './alert';
 import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  USER_LOADED,
-  AUTH_ERROR,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  LOGOUT,
-  UPDATEPROFILE_SUCCESS,
-  UPDATEPROFILE_FAIL,
+	REGISTER_SUCCESS,
+	REGISTER_FAIL,
+	USER_LOADED,
+	AUTH_ERROR,
+	LOGIN_SUCCESS,
+	LOGIN_FAIL,
+	LOGOUT,
+	UPDATEPROFILE_SUCCESS,
+	UPDATEPROFILE_FAIL,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
 // Load User
 
 export const loadUser = () => async (dispatch) => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
+	if (localStorage.token) {
+		setAuthToken(localStorage.token);
+	}
 
-  try {
-    const res = await axios.get('/api/auth');
+	try {
+		const res = await axios.get('/api/auth');
 
-    dispatch({ type: USER_LOADED, payload: res.data });
-  } catch (error) {
-    dispatch({ type: AUTH_ERROR });
-  }
+		dispatch({ type: USER_LOADED, payload: res.data });
+	} catch (error) {
+		dispatch({ type: AUTH_ERROR });
+	}
 };
 
 // Register User
 export const register =
-  ({ name, email, password }) =>
-  async (dispatch) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+	({ name, email, password }) =>
+	async (dispatch) => {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
 
-    const body = JSON.stringify({ name, email, password });
+		const body = JSON.stringify({ name, email, password });
 
-    try {
-      const res = await axios.post('/api/users', body, config);
+		try {
+			const res = await axios.post('/api/users', body, config);
 
-      dispatch({ type: REGISTER_SUCCESS, payload: res.data });
+			dispatch({ type: REGISTER_SUCCESS, payload: res.data });
 
-      dispatch(loadUser());
-    } catch (error) {
-      console.log(error);
-      const errors = error.response.data.errors;
+			dispatch(loadUser());
+		} catch (error) {
+			const errors = error.response.data.errors;
 
-      if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-      }
+			if (errors) {
+				errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+			}
 
-      dispatch({ type: REGISTER_FAIL });
-    }
-  };
+			dispatch({ type: REGISTER_FAIL });
+		}
+	};
 
 // Login User
 export const login = (email, password) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	};
 
-  const body = JSON.stringify({ email, password });
+	const body = JSON.stringify({ email, password });
 
-  try {
-    const res = await axios.post('/api/auth', body, config);
+	try {
+		const res = await axios.post('/api/auth', body, config);
 
-    dispatch({ type: LOGIN_SUCCESS, payload: res.data });
+		dispatch({ type: LOGIN_SUCCESS, payload: res.data });
 
-    dispatch(loadUser());
-  } catch (error) {
-    const errors = error.response.data.errors;
+		dispatch(loadUser());
+	} catch (error) {
+		const errors = error.response.data.errors;
 
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
+		if (errors) {
+			errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+		}
 
-    dispatch({ type: LOGIN_FAIL });
-  }
+		dispatch({ type: LOGIN_FAIL });
+	}
 };
 
 // Logout
 export const logout = () => (dispatch) => {
-  dispatch({ type: LOGOUT });
+	dispatch({ type: LOGOUT });
 };
 
 // Update Profile
 export const updateProfile = (email, name, password) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	};
 
-  const body = JSON.stringify({ name, password });
+	const body = JSON.stringify({ name, password });
 
-  try {
-    await axios.post('/api/users/updateprofile', body, config);
+	try {
+		await axios.post('/api/users/updateprofile', body, config);
 
-    dispatch({ type: UPDATEPROFILE_SUCCESS });
+		dispatch({ type: UPDATEPROFILE_SUCCESS });
 
-    dispatch(login(email, password));
-  } catch (error) {
-    console.log(error);
-    const errors = error.response.data.errors;
+		dispatch(login(email, password));
+	} catch (error) {
+		const errors = error.response.data.errors;
 
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
+		if (errors) {
+			errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+		}
 
-    dispatch({ type: UPDATEPROFILE_FAIL });
-  }
+		dispatch({ type: UPDATEPROFILE_FAIL });
+	}
 };
