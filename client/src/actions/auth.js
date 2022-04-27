@@ -71,6 +71,10 @@ export const login = (email, password) => async (dispatch) => {
 	try {
 		const res = await axios.post('/api/auth', body, config);
 
+		if (res.data.errors) {
+			throw new Error(res.data.errors[0].msg);
+		}
+
 		dispatch({ type: LOGIN_SUCCESS, payload: res.data });
 
 		dispatch(loadUser());
