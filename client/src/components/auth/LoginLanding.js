@@ -18,7 +18,6 @@ const LoginLanding = ({ login }) => {
 
 	const onLogin = (e) => {
 		e.preventDefault();
-		console.log(email + ' ' + password);
 		login(email, password);
 	};
 
